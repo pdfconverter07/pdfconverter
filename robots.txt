@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pdfconverter07.github.io/pdfconverter/sitemap.xml
