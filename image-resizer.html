@@ -32,8 +32,8 @@ font-weight:bold;
 .logo span{color:#2563eb}
 
 .container{
-max-width:600px;
-margin:40px auto;
+max-width:620px;
+margin:35px auto;
 padding:0 15px;
 }
 
@@ -42,32 +42,66 @@ background:white;
 padding:28px;
 border-radius:18px;
 box-shadow:0 8px 30px rgba(0,0,0,.08);
-text-align:center;
 }
 
-h1{font-size:30px}
+h1{
+text-align:center;
+font-size:29px;
+}
 
-p{color:#667085}
+.description{
+text-align:center;
+color:#667085;
+}
 
 input[type=file]{
 width:100%;
 padding:12px;
-margin:15px 0;
-}
-
-input[type=number]{
-width:100%;
-padding:12px;
-margin:8px 0;
-border:1px solid #ddd;
-border-radius:8px;
+margin:18px 0;
 }
 
 label{
 display:block;
-text-align:left;
 font-weight:bold;
-margin-top:15px;
+margin-top:18px;
+margin-bottom:8px;
+}
+
+select,
+input[type=number]{
+width:100%;
+padding:12px;
+border:1px solid #d5d9e2;
+border-radius:8px;
+font-size:16px;
+}
+
+.ratio-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-top:8px;
+}
+
+.ratio{
+padding:11px 5px;
+border:1px solid #d5d9e2;
+border-radius:8px;
+background:white;
+cursor:pointer;
+text-align:center;
+}
+
+.ratio.active{
+background:#2563eb;
+color:white;
+border-color:#2563eb;
+}
+
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
 }
 
 button{
@@ -80,7 +114,7 @@ color:white;
 font-size:17px;
 font-weight:bold;
 cursor:pointer;
-margin-top:18px;
+margin-top:22px;
 }
 
 button:hover{
@@ -88,12 +122,14 @@ background:#1d4ed8;
 }
 
 #status{
+text-align:center;
 margin-top:18px;
 font-weight:bold;
 }
 
 .back{
 display:block;
+text-align:center;
 margin-top:20px;
 text-decoration:none;
 color:#2563eb;
@@ -106,6 +142,16 @@ color:white;
 text-align:center;
 padding:25px;
 font-size:14px;
+}
+
+@media(max-width:650px){
+.row{
+grid-template-columns:1fr 1fr;
+}
+
+.ratio-grid{
+grid-template-columns:repeat(3,1fr);
+}
 }
 </style>
 </head>
@@ -124,15 +170,78 @@ PDF<span>Converter07</span>
 
 <h1>📐 Image Resizer</h1>
 
-<p>Resize your image to the exact width and height.</p>
+<p class="description">
+Resize images using popular aspect ratios or custom dimensions.
+</p>
 
 <input type="file" id="image" accept="image/*">
 
-<label>Width (pixels)</label>
-<input type="number" id="width" placeholder="Example: 1080">
+<label>Aspect Ratio</label>
 
-<label>Height (pixels)</label>
-<input type="number" id="height" placeholder="Example: 1080">
+<div class="ratio-grid">
+
+<div class="ratio active" onclick="setRatio(1,1,this)">
+1:1
+</div>
+
+<div class="ratio" onclick="setRatio(3,4,this)">
+3:4
+</div>
+
+<div class="ratio" onclick="setRatio(4,3,this)">
+4:3
+</div>
+
+<div class="ratio" onclick="setRatio(16,9,this)">
+16:9
+</div>
+
+<div class="ratio" onclick="setRatio(9,16,this)">
+9:16
+</div>
+
+<div class="ratio" onclick="setRatio(2,3,this)">
+2:3
+</div>
+
+</div>
+
+<label>Unit</label>
+
+<select id="unit">
+<option value="px">Pixels</option>
+<option value="cm">Centimeters</option>
+</select>
+
+<div class="row">
+
+<div>
+
+<label>Width</label>
+
+<input
+type="number"
+id="width"
+placeholder="1080"
+min="1"
+>
+
+</div>
+
+<div>
+
+<label>Height</label>
+
+<input
+type="number"
+id="height"
+placeholder="1080"
+min="1"
+>
+
+</div>
+
+</div>
 
 <button onclick="resizeImage()">
 Resize & Download
@@ -154,13 +263,55 @@ Resize & Download
 
 <script>
 
+let ratioW=1;
+let ratioH=1;
+
+function setRatio(w,h,element){
+
+ratioW=w;
+ratioH=h;
+
+document.querySelectorAll(".ratio").forEach(function(item){
+
+item.classList.remove("active");
+
+});
+
+element.classList.add("active");
+
+const width=document.getElementById("width").value;
+
+if(width){
+
+document.getElementById("height").value =
+Math.round(width*(h/w));
+
+}
+
+}
+
+document.getElementById("width").addEventListener("input",function(){
+
+const width=parseFloat(this.value);
+
+if(width && ratioW && ratioH){
+
+document.getElementById("height").value =
+Math.round(width*(ratioH/ratioW));
+
+}
+
+});
+
 function resizeImage(){
 
 const file=document.getElementById("image").files[0];
 
-const width=parseInt(document.getElementById("width").value);
+let width=parseFloat(document.getElementById("width").value);
 
-const height=parseInt(document.getElementById("height").value);
+let height=parseFloat(document.getElementById("height").value);
+
+const unit=document.getElementById("unit").value;
 
 const status=document.getElementById("status");
 
@@ -174,9 +325,21 @@ return;
 
 if(!width || !height || width<=0 || height<=0){
 
-status.innerHTML="⚠️ Enter a valid width and height.";
+status.innerHTML="⚠️ Enter valid dimensions.";
 
 return;
+
+}
+
+/*
+96 pixels per inch is used for CM conversion.
+*/
+
+if(unit==="cm"){
+
+width=Math.round(width*96/2.54);
+
+height=Math.round(height*96/2.54);
 
 }
 
@@ -193,12 +356,17 @@ img.onload=function(){
 const canvas=document.createElement("canvas");
 
 canvas.width=width;
-
 canvas.height=height;
 
 const ctx=canvas.getContext("2d");
 
-ctx.drawImage(img,0,0,width,height);
+ctx.drawImage(
+img,
+0,
+0,
+width,
+height
+);
 
 canvas.toBlob(function(blob){
 
@@ -210,7 +378,11 @@ a.href=url;
 
 a.download="resized-image.jpg";
 
+document.body.appendChild(a);
+
 a.click();
+
+document.body.removeChild(a);
 
 URL.revokeObjectURL(url);
 
