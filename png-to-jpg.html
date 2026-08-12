@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Free PNG to JPG Converter - PDFConverter07</title>
+<meta name="description" content="Convert PNG images to JPG online for free. Fast and mobile friendly.">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f7fb;
+color:#172033;
+}
+
+header{
+background:white;
+padding:18px 20px;
+box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.logo{
+max-width:1000px;
+margin:auto;
+font-size:23px;
+font-weight:bold;
+}
+
+.logo span{color:#2563eb}
+
+.container{
+max-width:600px;
+margin:40px auto;
+padding:0 15px;
+}
+
+.box{
+background:white;
+padding:28px;
+border-radius:18px;
+box-shadow:0 8px 30px rgba(0,0,0,.08);
+text-align:center;
+}
+
+h1{
+font-size:30px;
+}
+
+p{
+color:#667085;
+line-height:1.5;
+}
+
+input[type=file]{
+width:100%;
+padding:12px;
+margin:20px 0;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+label{
+display:block;
+text-align:left;
+font-weight:bold;
+margin-top:15px;
+}
+
+input[type=range]{
+width:100%;
+margin:12px 0;
+}
+
+button{
+width:100%;
+padding:15px;
+border:0;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+margin-top:15px;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+#status{
+margin-top:18px;
+font-weight:bold;
+}
+
+.back{
+display:block;
+margin-top:20px;
+text-decoration:none;
+color:#2563eb;
+}
+
+footer{
+margin-top:50px;
+background:#172033;
+color:white;
+text-align:center;
+padding:25px;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+PDF<span>Converter07</span>
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<h1>🔄 PNG to JPG Converter</h1>
+
+<p>
+Convert PNG images into JPG format quickly and for free.
+</p>
+
+<input
+type="file"
+id="pngFile"
+accept="image/png"
+>
+
+<label>
+JPG Quality:
+<span id="qualityValue">90</span>%
+</label>
+
+<input
+type="range"
+id="quality"
+min="10"
+max="100"
+value="90"
+>
+
+<button onclick="convertPNG()">
+Convert & Download JPG
+</button>
+
+<div id="status"></div>
+
+<a class="back" href="index.html">
+← Back to Home
+</a>
+
+</div>
+
+</div>
+
+<footer>
+© 2026 PDFConverter07 · Free Online Tools
+</footer>
+
+<script>
+
+document.getElementById("quality").addEventListener(
+"input",
+function(){
+
+document.getElementById("qualityValue").innerText=this.value;
+
+}
+);
+
+function convertPNG(){
+
+const file=document.getElementById("pngFile").files[0];
+
+const quality=
+parseInt(document.getElementById("quality").value)/100;
+
+const status=document.getElementById("status");
+
+if(!file){
+
+status.innerHTML="⚠️ Please select a PNG image.";
+
+return;
+
+}
+
+status.innerHTML="⏳ Converting...";
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+const img=new Image();
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas");
+
+canvas.width=img.width;
+canvas.height=img.height;
+
+const ctx=canvas.getContext("2d");
+
+/*
+JPG does not support transparency.
+A white background is added.
+*/
+
+ctx.fillStyle="#ffffff";
+
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+canvas.toBlob(function(blob){
+
+const url=URL.createObjectURL(blob);
+
+const link=document.createElement("a");
+
+link.href=url;
+
+link.download="converted.jpg";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+URL.revokeObjectURL(url);
+
+status.innerHTML=
+"✅ JPG downloaded successfully!";
+
+},"image/jpeg",quality);
+
+};
+
+img.src=e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+</script>
+
+</body>
+</html>
