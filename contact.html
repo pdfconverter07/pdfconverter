@@ -46,6 +46,7 @@ background:#fff;
 padding:30px;
 border-radius:18px;
 box-shadow:0 6px 25px rgba(0,0,0,.07);
+text-align:center;
 }
 
 h1{
@@ -57,43 +58,15 @@ color:#667085;
 line-height:1.7;
 }
 
-input,
-textarea{
-width:100%;
-padding:13px;
-margin:8px 0 15px;
-border:1px solid #d5d9e2;
-border-radius:8px;
-font-family:Arial;
-font-size:15px;
-}
-
-textarea{
-height:140px;
-resize:vertical;
-}
-
-button{
-width:100%;
-padding:14px;
-border:0;
-border-radius:9px;
+.back{
+display:inline-block;
+margin-top:15px;
+padding:12px 20px;
 background:#2563eb;
 color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-background:#1d4ed8;
-}
-
-.back{
-display:block;
-margin-top:20px;
-color:#2563eb;
 text-decoration:none;
+border-radius:9px;
+font-weight:bold;
 }
 
 footer{
@@ -109,11 +82,9 @@ padding:25px;
 <body>
 
 <header>
-
 <div class="logo">
 PDF<span>Converter07</span>
 </div>
-
 </header>
 
 <div class="container">
@@ -123,45 +94,18 @@ PDF<span>Converter07</span>
 <h1>Contact Us</h1>
 
 <p>
-Have a question, suggestion or found a problem with one of our
-tools? You can contact us using the form below.
+Thank you for using PDFConverter07.
 </p>
 
-<form onsubmit="sendMessage(event)">
+<p>
+If you have questions, suggestions or notice a problem
+with one of our tools, we appreciate your feedback.
+</p>
 
-<label>Name</label>
-
-<input
-type="text"
-id="name"
-placeholder="Your name"
-required
->
-
-<label>Email</label>
-
-<input
-type="email"
-id="email"
-placeholder="Your email"
-required
->
-
-<label>Message</label>
-
-<textarea
-id="message"
-placeholder="Write your message..."
-required
-></textarea>
-
-<button type="submit">
-Send Message
-</button>
-
-</form>
-
-<div id="status"></div>
+<p>
+We are continuously working to improve our free online
+PDF and image tools.
+</p>
 
 <a class="back" href="index.html">
 ← Back to Home
@@ -174,43 +118,6 @@ Send Message
 <footer>
 © 2026 PDFConverter07 · Free Online Tools
 </footer>
-
-<script>
-
-function sendMessage(event){
-
-event.preventDefault();
-
-const name=document.getElementById("name").value;
-
-const email=document.getElementById("email").value;
-
-const message=document.getElementById("message").value;
-
-const subject=encodeURIComponent(
-"PDFConverter07 Contact - "+name
-);
-
-const body=encodeURIComponent(
-"Name: "+name+
-"\nEmail: "+email+
-"\n\nMessage:\n"+message
-);
-
-/*
-Replace this email address with your real
-support email before publishing.
-*/
-
-window.location.href=
-"mailto:jaiminthakor124@gmail.com?subject="+
-subject+
-"&body="+
-body;
-
-}
-
-</script>
 
 </body>
 </html>
