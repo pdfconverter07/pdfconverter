@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Free PDF Merger - PDFConverter07</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f7fb;
+color:#172033;
+}
+
+header{
+background:white;
+padding:18px 20px;
+box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.logo{
+max-width:1000px;
+margin:auto;
+font-size:23px;
+font-weight:bold;
+}
+
+.logo span{color:#2563eb}
+
+.container{
+max-width:650px;
+margin:35px auto;
+padding:0 15px;
+}
+
+.box{
+background:white;
+padding:28px;
+border-radius:18px;
+box-shadow:0 8px 30px rgba(0,0,0,.08);
+text-align:center;
+}
+
+h1{font-size:30px}
+
+.description{
+color:#667085;
+line-height:1.5;
+}
+
+input[type=file]{
+width:100%;
+padding:12px;
+margin:20px 0;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+.file-list{
+text-align:left;
+margin:15px 0;
+}
+
+.file-item{
+background:#f5f7fb;
+padding:10px;
+margin:6px 0;
+border-radius:8px;
+font-size:14px;
+}
+
+button{
+width:100%;
+padding:15px;
+border:0;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+margin-top:12px;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+button:disabled{
+background:#9ca3af;
+cursor:not-allowed;
+}
+
+#status{
+margin-top:18px;
+font-weight:bold;
+}
+
+.back{
+display:block;
+margin-top:20px;
+text-decoration:none;
+color:#2563eb;
+}
+
+footer{
+margin-top:50px;
+background:#172033;
+color:white;
+text-align:center;
+padding:25px;
+font-size:14px;
+}
+
+@media(max-width:650px){
+h1{font-size:26px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">
+PDF<span>Converter07</span>
+</div>
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<h1>📑 Merge PDF Files</h1>
+
+<p class="description">
+Select multiple PDF files and combine them into one PDF.
+</p>
+
+<input
+type="file"
+id="pdfFiles"
+accept="application/pdf"
+multiple
+onchange="showFiles()"
+>
+
+<div id="fileList" class="file-list"></div>
+
+<button onclick="mergePDF()">
+Merge & Download PDF
+</button>
+
+<div id="status"></div>
+
+<a class="back" href="index.html">
+← Back to Home
+</a>
+
+</div>
+
+</div>
+
+<footer>
+© 2026 PDFConverter07 · Free Online Tools
+</footer>
+
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<script>
+
+function showFiles(){
+
+const files=document.getElementById("pdfFiles").files;
+
+const list=document.getElementById("fileList");
+
+list.innerHTML="";
+
+if(files.length===0){
+return;
+}
+
+for(let i=0;i<files.length;i++){
+
+const div=document.createElement("div");
+
+div.className="file-item";
+
+div.innerHTML=(i+1)+". "+files[i].name;
+
+list.appendChild(div);
+
+}
+
+}
+
+async function mergePDF(){
+
+const files=document.getElementById("pdfFiles").files;
+
+const status=document.getElementById("status");
+
+if(files.length<2){
+
+status.innerHTML="⚠️ Please select at least 2 PDF files.";
+
+return;
+
+}
+
+status.innerHTML="⏳ Merging PDF files...";
+
+try{
+
+const mergedPdf=await PDFLib.PDFDocument.create();
+
+for(let i=0;i<files.length;i++){
+
+const arrayBuffer=await files[i].arrayBuffer();
+
+const pdf=await PDFLib.PDFDocument.load(arrayBuffer);
+
+const pages=await mergedPdf.copyPages(
+pdf,
+pdf.getPageIndices()
+);
+
+pages.forEach(function(page){
+
+mergedPdf.addPage(page);
+
+});
+
+}
+
+const mergedBytes=await mergedPdf.save();
+
+const blob=new Blob(
+[mergedBytes],
+{type:"application/pdf"}
+);
+
+const url=URL.createObjectURL(blob);
+
+const link=document.createElement("a");
+
+link.href=url;
+
+link.download="merged.pdf";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+URL.revokeObjectURL(url);
+
+status.innerHTML="✅ PDF merged and downloaded successfully!";
+
+}catch(error){
+
+console.error(error);
+
+status.innerHTML="❌ Unable to merge these PDF files.";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
