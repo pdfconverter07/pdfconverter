@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free PDF Splitter - PDFConverter07</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f7fb;
+color:#172033;
+}
+header{
+background:white;
+padding:18px 20px;
+box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.logo{
+max-width:1000px;
+margin:auto;
+font-size:23px;
+font-weight:bold;
+}
+.logo span{color:#2563eb}
+.container{
+max-width:650px;
+margin:35px auto;
+padding:0 15px;
+}
+.box{
+background:white;
+padding:28px;
+border-radius:18px;
+box-shadow:0 8px 30px rgba(0,0,0,.08);
+text-align:center;
+}
+h1{font-size:30px}
+p{color:#667085;line-height:1.5}
+input[type=file]{
+width:100%;
+padding:12px;
+margin:20px 0;
+border:1px solid #ddd;
+border-radius:8px;
+}
+input[type=number]{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:8px;
+font-size:16px;
+}
+label{
+display:block;
+text-align:left;
+font-weight:bold;
+margin:12px 0 7px;
+}
+button{
+width:100%;
+padding:15px;
+border:0;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+margin-top:20px;
+}
+button:hover{background:#1d4ed8}
+#status{
+margin-top:18px;
+font-weight:bold;
+}
+.back{
+display:block;
+margin-top:20px;
+text-decoration:none;
+color:#2563eb;
+}
+footer{
+margin-top:50px;
+background:#172033;
+color:white;
+text-align:center;
+padding:25px;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">
+PDF<span>Converter07</span>
+</div>
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<h1>✂️ Split PDF</h1>
+
+<p>
+Select a PDF and choose the page range you want to extract.
+</p>
+
+<input
+type="file"
+id="pdfFile"
+accept="application/pdf"
+>
+
+<label>From Page</label>
+<input
+type="number"
+id="fromPage"
+min="1"
+placeholder="1"
+>
+
+<label>To Page</label>
+<input
+type="number"
+id="toPage"
+min="1"
+placeholder="2"
+>
+
+<button onclick="splitPDF()">
+Split & Download PDF
+</button>
+
+<div id="status"></div>
+
+<a class="back" href="index.html">
+← Back to Home
+</a>
+
+</div>
+</div>
+
+<footer>
+© 2026 PDFConverter07 · Free Online Tools
+</footer>
+
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<script>
+
+async function splitPDF(){
+
+const file=document.getElementById("pdfFile").files[0];
+const from=parseInt(document.getElementById("fromPage").value);
+const to=parseInt(document.getElementById("toPage").value);
+const status=document.getElementById("status");
+
+if(!file){
+status.innerHTML="⚠️ Please select a PDF.";
+return;
+}
+
+if(!from || !to || from<1 || to<from){
+status.innerHTML="⚠️ Enter a valid page range.";
+return;
+}
+
+status.innerHTML="⏳ Splitting PDF...";
+
+try{
+
+const bytes=await file.arrayBuffer();
+
+const sourcePdf=await PDFLib.PDFDocument.load(bytes);
+
+const total=sourcePdf.getPageCount();
+
+if(to>total){
+status.innerHTML="⚠️ PDF has only "+total+" pages.";
+return;
+}
+
+const newPdf=await PDFLib.PDFDocument.create();
+
+const pageIndexes=[];
+
+for(let i=from-1;i<to;i++){
+pageIndexes.push(i);
+}
+
+const pages=await newPdf.copyPages(
+sourcePdf,
+pageIndexes
+);
+
+pages.forEach(function(page){
+newPdf.addPage(page);
+});
+
+const output=await newPdf.save();
+
+const blob=new Blob(
+[output],
+{type:"application/pdf"}
+);
+
+const url=URL.createObjectURL(blob);
+
+const link=document.createElement("a");
+
+link.href=url;
+link.download="split-pages.pdf";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(url);
+
+status.innerHTML="✅ PDF split successfully!";
+
+}catch(error){
+
+console.error(error);
+
+status.innerHTML="❌ Unable to split this PDF.";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
