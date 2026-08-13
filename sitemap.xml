@@ -1,52 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/jpg-to-pdf.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/compressor.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/pdf-to-jpg.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/image-resizer.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/pdf-merge.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/pdf-split.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/png-to-jpg.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/about.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/privacy.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/terms.html</loc>
-</url>
-
-<url>
-<loc>https://pdfconverter07.github.io/pdfconverter/contact.html</loc>
-</url>
-
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/compressor.html</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/jpg-to-pdf.html</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/pdf-to-jpg.html</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/image-resizer.html</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/pdf-merge.html</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/pdf-split.html</loc>
+  </url>
+  <url>
+    <loc>https://pdfconverter07.github.io/pdfconverter/png-to-jpg.html</loc>
+  </url>
 </urlset>
